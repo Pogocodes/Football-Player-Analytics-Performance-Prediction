@@ -1,4 +1,4 @@
-"""Streamlit football analytics dashboard — FotMob-inspired dark UI."""
+"""Streamlit football analytics dashboard — Sportz-inspired dark UI."""
 
 from __future__ import annotations
 
@@ -26,184 +26,201 @@ from src.preprocessing import (  # noqa: E402
 # ── Page config ──
 st.set_page_config(page_title="Football Goal Prediction", page_icon="⚽", layout="wide")
 
-# ── FotMob-inspired CSS ──
+# ── Sportz-inspired CSS ──
 st.markdown("""
 <style>
-/* ─── Global dark theme overrides ─── */
-.stApp {
-    background-color: #0e1117;
-    color: #e0e0e0;
+@import url(''https://fonts.googleapis.com/css?family=Mukta:300,400,700'');
+
+/* ─── Sportz Template Theme overrides ─── */
+html, body, [class*=''css''] {
+    font-family: ''Mukta'', sans-serif;
 }
 
-/* ─── Metric cards like FotMob ─── */
-div[data-testid="stMetric"] {
-    background: linear-gradient(135deg, #1a1d23 0%, #1e2229 100%);
-    border: 1px solid #2a2d35;
-    border-radius: 12px;
-    padding: 16px 20px;
+.stApp {
+    background-color: #222222;
+    color: #ffffff;
+}
+
+/* ─── Metric cards ─── */
+div[data-testid=''stMetric''] {
+    background: #000000;
+    border: 2px solid #333333;
+    border-radius: 0px;
+    padding: 20px;
     text-align: center;
+    border-bottom: 4px solid #f23a2e;
 }
-div[data-testid="stMetric"] label {
-    color: #8b8d93 !important;
-    font-size: 0.75rem !important;
+div[data-testid=''stMetric''] label {
+    color: #999999 !important;
+    font-size: 0.85rem !important;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.1em;
 }
-div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
+div[data-testid=''stMetric''] div[data-testid=''stMetricValue''] {
     color: #ffffff !important;
     font-weight: 700 !important;
+    font-size: 2.5rem !important;
 }
 
 /* ─── Tab styling ─── */
-.stTabs [data-baseweb="tab-list"] {
-    gap: 0px;
-    background-color: #1a1d23;
-    border-radius: 12px;
-    padding: 4px;
+.stTabs [data-baseweb=''tab-list''] {
+    gap: 10px;
+    background-color: transparent;
 }
-.stTabs [data-baseweb="tab"] {
-    border-radius: 8px;
-    color: #8b8d93;
-    font-weight: 600;
-    padding: 8px 20px;
+.stTabs [data-baseweb=''tab''] {
+    border-radius: 0px;
+    color: #999999;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 10px 20px;
+    background-color: #000000;
+    border: 1px solid #333333;
 }
-.stTabs [aria-selected="true"] {
-    background-color: #00c853 !important;
-    color: #0e1117 !important;
-    border-radius: 8px;
+.stTabs [aria-selected=''true''] {
+    background-color: #f23a2e !important;
+    color: #ffffff !important;
+    border-color: #f23a2e !important;
 }
 
 /* ─── Cards / containers ─── */
-div[data-testid="stExpander"] {
-    background-color: #1a1d23;
-    border: 1px solid #2a2d35;
-    border-radius: 12px;
+div[data-testid=''stExpander''] {
+    background-color: #000000;
+    border: 1px solid #333333;
+    border-radius: 0px;
 }
 
 /* ─── Buttons ─── */
 .stButton > button {
-    background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
-    color: #0e1117;
+    background-color: #f23a2e;
+    color: #ffffff;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
     border: none;
-    border-radius: 8px;
-    padding: 8px 32px;
-    transition: all 0.2s;
+    border-radius: 0px;
+    padding: 15px 30px;
+    transition: 0.3s all ease;
 }
 .stButton > button:hover {
-    background: linear-gradient(135deg, #00e676 0%, #69f0ae 100%);
-    transform: translateY(-1px);
-}
-
-/* ─── Success/error boxes ─── */
-div[data-testid="stAlert"] {
-    border-radius: 12px;
-    border: none;
+    background-color: #ffffff;
+    color: #000000;
+    transform: translateY(-2px);
 }
 
 /* ─── Stat card helper ─── */
 .stat-card {
-    background: linear-gradient(135deg, #1a1d23 0%, #1e2229 100%);
-    border: 1px solid #2a2d35;
-    border-radius: 12px;
-    padding: 20px;
+    background: #000000;
+    border: 1px solid #333333;
+    border-bottom: 3px solid #f23a2e;
+    padding: 25px 20px;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 .stat-card .stat-value {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: 2.5rem;
+    font-weight: 700;
     color: #ffffff;
+    line-height: 1;
 }
 .stat-card .stat-label {
-    font-size: 0.75rem;
-    color: #8b8d93;
+    font-size: 0.85rem;
+    color: #999999;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 4px;
+    letter-spacing: 0.1em;
+    margin-top: 10px;
 }
-.stat-card.green .stat-value { color: #00c853; }
-.stat-card.red .stat-value { color: #ff5252; }
-.stat-card.blue .stat-value { color: #448aff; }
-.stat-card.orange .stat-value { color: #ff9800; }
+/* Sportz theme doesn''t use many colors, mostly red/white/black */
+.stat-card.green, .stat-card.red, .stat-card.blue, .stat-card.orange {
+    border-bottom: 3px solid #f23a2e;
+}
+.stat-card.green .stat-value, .stat-card.blue .stat-value, .stat-card.orange .stat-value { 
+    color: #ffffff; 
+}
+.stat-card.red .stat-value { color: #f23a2e; }
 
 /* ─── Player header ─── */
 .player-header {
-    background: linear-gradient(135deg, #1a2332 0%, #0d1a2b 100%);
-    border: 1px solid #1e3a5f;
-    border-radius: 16px;
-    padding: 24px 32px;
-    margin-bottom: 16px;
+    background: #000000;
+    border-left: 5px solid #f23a2e;
+    padding: 30px 40px;
+    margin-bottom: 25px;
 }
 .player-name {
-    font-size: 1.8rem;
-    font-weight: 800;
+    font-size: 2.5rem;
+    font-weight: 700;
     color: #ffffff;
     margin: 0;
+    text-transform: uppercase;
 }
 .player-info {
-    color: #8b8d93;
-    font-size: 0.9rem;
-    margin-top: 4px;
+    color: #f23a2e;
+    font-size: 1.1rem;
+    margin-top: 5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 /* ─── Prediction result ─── */
 .prediction-box {
-    border-radius: 16px;
-    padding: 24px 32px;
+    padding: 40px;
     text-align: center;
-    margin: 16px 0;
+    margin: 20px 0;
+    background: #000000;
 }
 .prediction-box.likely {
-    background: linear-gradient(135deg, #1b3a1b 0%, #0a2e0a 100%);
-    border: 2px solid #00c853;
+    border: 2px solid #f23a2e;
 }
 .prediction-box.unlikely {
-    background: linear-gradient(135deg, #3a1b1b 0%, #2e0a0a 100%);
-    border: 2px solid #ff5252;
+    border: 2px solid #333333;
 }
-.prediction-box .pred-icon { font-size: 2.5rem; }
+.prediction-box .pred-icon { font-size: 3rem; }
 .prediction-box .pred-text {
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     color: #ffffff;
-    margin-top: 8px;
+    margin-top: 15px;
+    text-transform: uppercase;
 }
 .prediction-box .pred-prob {
-    font-size: 2.5rem;
-    font-weight: 900;
-    margin-top: 4px;
+    font-size: 4rem;
+    font-weight: 700;
+    margin-top: 10px;
+    line-height: 1;
 }
-.prediction-box.likely .pred-prob { color: #00c853; }
-.prediction-box.unlikely .pred-prob { color: #ff5252; }
+.prediction-box.likely .pred-prob { color: #f23a2e; }
+.prediction-box.unlikely .pred-prob { color: #999999; }
 .prediction-box .pred-sub {
-    color: #8b8d93;
-    font-size: 0.85rem;
-    margin-top: 8px;
+    color: #999999;
+    font-size: 1rem;
+    margin-top: 15px;
+    letter-spacing: 0.05em;
 }
 
 /* ─── Section headers ─── */
 .section-header {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #ffffff;
-    border-left: 3px solid #00c853;
-    padding-left: 12px;
-    margin: 24px 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-left: 4px solid #f23a2e;
+    padding-left: 15px;
+    margin: 40px 0 20px 0;
 }
 
 /* ─── Dataframe styling ─── */
-div[data-testid="stDataFrame"] {
-    border-radius: 12px;
-    overflow: hidden;
+div[data-testid=''stDataFrame''] {
+    border: 1px solid #333333;
 }
 
 /* Form border */
-div[data-testid="stForm"] {
-    background-color: #1a1d23;
-    border: 1px solid #2a2d35;
-    border-radius: 12px;
-    padding: 20px;
+div[data-testid=''stForm''] {
+    background-color: #000000;
+    border: 1px solid #333333;
+    border-top: 4px solid #f23a2e;
+    border-radius: 0px;
+    padding: 30px;
 }
 </style>
 """, unsafe_allow_html=True)
